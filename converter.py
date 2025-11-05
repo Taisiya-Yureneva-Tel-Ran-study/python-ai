@@ -5,15 +5,13 @@ def enumerator(values: Iterable[str]) -> dict[str, int]:
     return {value: index for (index, value) in enumerate(values)}
 
 def columnsMapper(columnsStr: list[str], df: DataFrame)->dict[str, dict[str, int]]:
-#    return {colName: enumerator(df[colName].unique()) for colName in columnsStr}   
-    res: dict[str, dict[str, int]] = {}
-    for column in columnsStr:
-        res[column] = enumerator(df[column].unique())
-    return res
+    return {colName: enumerator(df[colName].unique()) for colName in columnsStr}   
     
 def convertX(df: DataFrame, mapper: dict[str, dict[str, int]])-> DataFrame:
-    res = {colName: [mapper[colName][value] for value in df[colName]] for colName in mapper.keys()}
-    return DataFrame(res)
+  resDict: dict[str, list] = {}
+  for column in df:
+      resDict[column] = [mapper[column][valueStr] for valueStr in df[column]] if column in mapper else df[column]
+  return DataFrame(resDict)    
 
 if __name__ == "__main__":
     df = DataFrame(({
