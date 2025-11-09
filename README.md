@@ -1,11 +1,17 @@
-## HW#30 
+## HW#31
 
-### Creating predictions model
-##### Create model for predictions with Gender, Color as input (X) and car's model as output (y)
-##### Compute accuracy
-##### Persist
+### Implementation of the Game of Life algorithm
 
-### Working with "pandas" package (research task)
-##### Getting Data Frame containing only data about Hyundai
-##### Getting Data Frame containing only data about Toyota with price greater than 40000
-##### Define 3 most popular car's models
+##### For a space that is populated:
+* Each cell with one or no neighbors dies, as if by solitude.
+
+* Each cell with four or more neighbors dies, as if by overpopulation.
+
+* Each cell with two or three neighbors survives.
+
+
+##### For a space that is empty or unpopulated:
+* Each cell with three neighbors becomes populated.
+
+#### The implementation stops once the image is stable. 
+However, sometimes it is impossible to reach the stable state - for example, a row of 3 live cells will always alternate between 2 states. That's why there is a limit of 50 iterations.
