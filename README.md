@@ -1,16 +1,10 @@
-## HW#31
+## HW#32
 
-### Implementation of the Game of Life algorithm
+### Module "text_sklearn_model.py" with class TextModel is implemented
+* constructor (init) takes string with sentences separated by dot
+* method getAnswers(self, question: str, nAnswers: int)->list[str]
 
-##### For a space that is populated:
-* Each cell with one or no neighbors dies, as if by solitude.
+-- takes string with question sentence and number of relevant answers
+-- returns list of strings-answers (maximal number of strings is the given nAnswers value) sorted by similarity (relevance) to the answer in the descending order
 
-* Each cell with four or more neighbors dies, as if by overpopulation.
-
-* Each cell with two or three neighbors survives.
-
-##### For a space that is empty or unpopulated:
-* Each cell with three neighbors becomes populated.
-
-#### The implementation stops once the image is stable. 
-However, sometimes it is impossible to reach the stable state - for example, a row of 3 live cells will always alternate between 2 states. That's why there is a limit of 50 iterations.
+Result contains only sentences with non-zero similarity. If no such sentences, empty list is returned
