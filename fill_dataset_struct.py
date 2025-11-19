@@ -22,9 +22,9 @@ def make_label(xc, yc, r, path, type):
 
 def make_figure(x1, y1, w, path, type: str = "rect"):
     im_arr: np = np.zeros((WIDTH, HEIGHT, 3), dtype=np.uint8)
-    if type == "rect": # then x, y - center and w is side length / 2
+    if type == "rect": #  x, y - center and w is side length / 2
         cv2.rectangle(im_arr, (x1-w, y1-w), (x1 + w, y1 + w), (0, 0, 200), -1)
-    else:   # then x, y - center and w is radius
+    else:   #  x, y - center and w is radius
         cv2.circle(im_arr, (x1, y1), w, (0, 0, 200), -1)
     cv2.imwrite(path, im_arr)
 
@@ -34,7 +34,7 @@ def make_figure_with_label(x1, y1, w, path, type: str = "rect"):
     
 def get_coordinates():
     w = np.random.randint(10, 100)
-    x = np.random.randint(w, WIDTH-w)
+    x = np.random.randint(w, WIDTH-w) # so that figure is not out of image
     y = np.random.randint(w, HEIGHT-w)
     return (x, y, w)
 
