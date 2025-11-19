@@ -39,13 +39,20 @@ def get_coordinates():
     return (x, y, w)
 
 if __name__ == "__main__":   
-    for i in range(COUNT):
-        x, y, w = get_coordinates()
-        make_figure_with_label(x, y, w, TRAIN_IMAGES + f"rect_{i}.png", "rect")
-        make_figure_with_label(x, y, w, TRAIN_IMAGES + f"circle_{i}.png", "circle")
+#    for i in range(COUNT):
+#        x, y, w = get_coordinates()
+#        make_figure_with_label(x, y, w, TRAIN_IMAGES + f"rect_{i}.png", "rect")
+#       make_figure_with_label(x, y, w, TRAIN_IMAGES + f"circle_{i}.png", "circle")
+#    
+#    for i in range(VAL_COUNT):
+##        x, y, w = get_coordinates()
+#        make_figure_with_label(x, y, w, BASE_IMAGES + f"val/rect_{i}.png", "rect")
+#        make_figure_with_label(x, y, w, BASE_IMAGES + f"val/circle_{i}.png", "circle")
     
-    for i in range(VAL_COUNT):
-        x, y, w = get_coordinates()
-        make_figure_with_label(x, y, w, BASE_IMAGES + f"val/rect_{i}.png", "rect")
-        make_figure_with_label(x, y, w, BASE_IMAGES + f"val/circle_{i}.png", "circle")
-    
+
+    im_arr: np = np.zeros((WIDTH, HEIGHT, 3), dtype=np.uint8)
+    cv2.rectangle(im_arr, (100, 100), (220, 220), (200, 0, 200), -1)
+    cv2.circle(im_arr, (150, 150), 15, (0, 200, 200), -1)
+    cv2.rectangle(im_arr, (10, 10), (20, 20), (200, 0, 0), -1)
+    cv2.circle(im_arr, (230, 230), 25, (200, 200, 200), -1)
+    cv2.imwrite("test-test.png", im_arr)
