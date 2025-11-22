@@ -1,18 +1,18 @@
-## HW#34
+## HW#35 Regular Expressions
 
-### code in fill_dataset_struct.py creates:
+### function ipV4AddressRe
+#### Returns regexp as match pattern of IPv4 address
 
-- 30 circle images with different random x, y, radius
-- 30 square images with different random x, y, width
-- 30 labels matching the 30 above circle images
-- 30 labels matching the 30 above square images
-- 3 circles for validation (val)
-- 3 squares for validation
-- 3 labels matching the 3 above circle images for validation
-- 3 labels matching the 3 above square images for validation
+- comprises of 4 octets separated by dot
+- each octet contains 1-3 symbols from 0 to 255
 
-Update item "names" in data.yaml file
-Train and create model (best.pt)
-Test created model on some image downloaded from Internet containing circles and squares
-color doesn't mater
-find out image containing combination circles and squares
+### function mobileIsraelNumberRe
+#### Returns regexp for mobile phone Israel number
+- +972- - Israel preffix (not mandatary)
+- Operator preffix 0 (only without +972-)
+- 50,51, 52, 53, 54, 55, 56, 57,58, 59
+- optional dash
+- 7 digits as follows
+- xxxxxxx
+- xxx-xx-xx
+- x-xx-xx-xx
