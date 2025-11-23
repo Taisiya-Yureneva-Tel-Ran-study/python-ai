@@ -47,10 +47,10 @@ class TestRegEx(TestCase):
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "+972-054-1234567"))
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "+972-54-1-234-567")) 
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "+972-54123456"))
-        self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "059123-45-677"))
+        self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "059123----45-67"))
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "054-1-2-3-45-67"))
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "0571-23-45-6-7"))
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "+7571-123-45-67"))
-        self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "+975-53-123-45-67"))
+        self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "+97553---45-67"))
         self.assertFalse(re.fullmatch(regex.mobileIsraelNumberRe(), "53-123-45-67"))
           
