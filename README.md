@@ -1,18 +1,25 @@
-## HW#35 Regular Expressions
+## HW#36 Regular Expressions + LTR Evaluation. 
 
-### function ipV4AddressRe
-#### Returns regexp as match pattern of IPv4 address
+### Functions are changed to operate on floats
 
-- comprises of 4 octets separated by dot
-- each octet contains 1-3 symbols from 0 to 255
+### TODO:
+Implement pow (**) operator.
 
-### function mobileIsraelNumberRe
-#### Returns regexp for mobile phone Israel number
-- +972- - Israel preffix (not mandatary)
-- Operator preffix 0 (only without +972-)
-- 50,51, 52, 53, 54, 55, 56, 57,58, 59
-- optional dash
-- 7 digits as follows
-- xxxxxxx
-- xxx-xx-xx
-- x-xx-xx-xx
+### Function __checkArithmeticExpr
+#### takes: expression
+#### calls:
+    - __checkExpressionIsFine(expression) - taking expression as argument and matching it against regex to check that only allowed characters are used; if any unsupported characters are found, function raises ValueError.
+
+    - __checkExpression(expression) - taking expression as argument and checking that it does not:
+        - starts with operator
+        - ends with operator
+        - has two operators in a row
+        - has two operands in a row
+        - has operator before opening parentheses
+        - has operator after closing parentheses
+        - has operand before opening parentheses
+        - has operand after closing parentheses
+    
+    - __countParentheses(expression) - taking expression as argument and checking that the count of opening and closing parentheses is equal; if not, function raises ValueError.
+
+#### Tests are implemeted to check evaluation of expressions with floats.
