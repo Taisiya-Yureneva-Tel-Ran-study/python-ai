@@ -6,6 +6,7 @@ __ops: dict = {
     "-": op.sub,
     "*": op.mul,
     "/": op.truediv,
+    "**": op.pow
 }
 
 def __binCompute(op1: float, op2: float, oper: str) -> int:
@@ -15,21 +16,26 @@ def __binCompute(op1: float, op2: float, oper: str) -> int:
     return operator(op1, op2)
 
 def __ltrEvalWOParentheses(expr: str) -> float:
-    operands: list[str] = re.split(r"[/*+-]", expr) 
-    operators: list[str] = re.split(r"\d+\.?\d*", expr)
+    operators: list[str] = re.findall(r"[+/]|(?<=\d|\.)\-|\*{1,2}", expr) 
+    operands = re.findall(r"(?<=[^\d\.\()])\-\d+\.?\d*|(?:\d+\.?\d*)", expr)
+    
     res = float(operands[0])
-    for i in range(1, len(operators)-1):
-        res = __binCompute(res, float(operands[i]), operators[i])
+    for i in range(1, len(operators)+1):
+        res = __binCompute(res, float(operands[i]), operators[i-1])
     return res
 
 def __checkExpression(expr: str) -> bool:
     # We check if the expression is valid trying to find errors
     # It can be really useful to help the user to fix the expression
-    patCannotStartWith = r"(\A[-*/+)])" # Expression cannot start with operands or closing parenthesis
-    patNoOperationAfterOpenParenthesis = r"(\([+*/-])" # No operation after opening parenthesis
+    patCannotStartWith = r"(\A[*/+)])" # Expression cannot start with operands or closing parenthesis - except for "-"
+    patNoOperationAfterOpenParenthesis = r"(\([+*/])" # No operation after opening parenthesis - except for "-"
     patNoOperationBeforeCloseParenthesis = r"([+*/-]\))" # No operation before closing parenthesis
-    patNoDigitsBeforeOpenParenthesis = r"((\d|\.)\()" # No digits before opening parenthesis
-    patNoDuplicateOperators = r"([+*/-]{2,})" # No duplicate operators
+    patNoDigitsBeforeOpenParenthesis = r"((\d|\.)\()" # No digits or dots before opening parenthesis
+    
+    # No duplicate operators - keeping in mind that there is "**" and negative numbers that can be
+    # at the beginning of the expression, after any operator and after an opening parenthesis 
+    patNoDuplicateOperators = r"[/+]{2,}|[^\d\)\*]\*|((?<=[^\d/*+\.])\-)"   #([+/]{2,})|()" 
+    
     patNoDigitsAfterCloseParenthesis = r"(\)(\d|\.))" # No digits after closing parenthesis
     patCannotEndWith = r"([+*/(-]\Z)" # Expression cannot end with operators or opening parenthesis
     pattern = fr"{patCannotStartWith}|{patNoOperationAfterOpenParenthesis}|{patNoOperationBeforeCloseParenthesis}|{patNoDigitsBeforeOpenParenthesis}|{patNoDuplicateOperators}|{patNoDigitsAfterCloseParenthesis}|{patCannotEndWith}"

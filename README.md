@@ -2,21 +2,16 @@
 
 ### Functions are changed to operate on floats
 
-### TODO:
-Implement pow (**) operator.
-
 ### Function __checkArithmeticExpr
 #### takes: expression
 #### calls:
     - __checkExpressionIsFine(expression) - taking expression as argument and matching it against regex to check that only allowed characters are used; if any unsupported characters are found, function raises ValueError.
 
     - __checkExpression(expression) - taking expression as argument and checking that it does not:
-        - starts with operator
+        - start with operator - except for minus sign
         - ends with operator
-        - has two operators in a row
-        - has two operands in a row
-        - has operator before opening parentheses
-        - has operator after closing parentheses
+        - has two operators in a row - except for pow and minus sign
+        - has operator after opening parentheses - except for minus sign
         - has operand before opening parentheses
         - has operand after closing parentheses
     

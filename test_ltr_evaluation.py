@@ -7,6 +7,8 @@ class Test(TestCase):
         self.assertAlmostEqual(ltr.eval('( 10.75 - 3.93 ) * 2. - 13.4568 / 2.075'), 0.0882, places=3)
         expr = "(3 + (2 * 10 / (40 - 20))+(3 * 4)) * 10"
         self.assertAlmostEqual(160, ltr.eval(expr))
+        expr = "-3 + 2 ** -4 / -2 + -8 * -3"
+        self.assertAlmostEqual(24.0024, ltr.eval(expr))
         
     def test_negative_number_error(self):
         with self.assertRaises(ValueError):
