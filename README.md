@@ -4,17 +4,18 @@
 
 ### Function __checkArithmeticExpr
 #### takes: expression
-#### calls:
-    - __checkExpressionIsFine(expression) - taking expression as argument and matching it against regex to check that only allowed characters are used; if any unsupported characters are found, function raises ValueError.
+Expression may contain:
 
-    - __checkExpression(expression) - taking expression as argument and checking that it does not:
-        - start with operator - except for minus sign
-        - ends with operator
-        - has two operators in a row - except for pow and minus sign
-        - has operator after opening parentheses - except for minus sign
-        - has operand before opening parentheses
-        - has operand after closing parentheses
-    
+    - numbers, floating point separator is dot ("."), number cannot start or end with dot; numbers can be negative;
+    - parentheses, 
+    - operators +, -, *, /, ** (power) and spaces.
+Expression cannot start with an operator (except for minus sign) or end with operator.
+
+A workaround is implemented: to ease processing of operators, the "^" is used for pow in the code, and the "**" is substituted with "^" in the initial expression.
+
+#### calls:
+    - __checkFullMatch(expression) - taking expression as argument and matching it against numbers, operators and parentheses rules groups. Found groups are substituted with empty string; if any part of the expression is not matching any group, it is not substituted and a ValueError is raised.
+
     - __countParentheses(expression) - taking expression as argument and checking that the count of opening and closing parentheses is equal; if not, function raises ValueError.
 
 #### Tests are implemeted to check evaluation of expressions with floats.

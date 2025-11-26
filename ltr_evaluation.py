@@ -1,13 +1,29 @@
 import operator as op
 import re
+from functools import reduce
 
 __ops: dict = {
     "+": op.add,
     "-": op.sub,
     "*": op.mul,
     "/": op.truediv,
-    "**": op.pow
+    "^": op.pow
 }
+
+__operators = reduce(lambda res, el: res + "\\" + el, __ops.keys(), "")
+# groups to match numbers, operators and parentheses
+__numberPattern = r"(?<![\d)])\-\d+\.?\d*|\d+\.?\d*" # numbers including negative numbers
+__operatorPattern = fr"(?<=\d|\))([{__operators}])(?=[\d(-])"  # operators are taken only if they are after a number or closing parenthesis
+# opening parenthesis shoud not be preceded by a digit
+# closing parenthesis should be preceded by a digit or closing parenthesis
+__parenthesesPattern = r"(?<!\d)\(|(?<=[\d)])\)"
+
+# pattern to match the initial expression, including numbers, operators and boundary conditions
+__fullExprPatternCompiled = re.compile(fr"{__numberPattern}|{__operatorPattern}|{__parenthesesPattern}")
+
+__numberPatternCompiled = re.compile(__numberPattern)
+__operatorPatternCompiled = re.compile(__operatorPattern)
+__parenthesesCompiled = re.compile(r"\([^()]+\)")
 
 def __binCompute(op1: float, op2: float, oper: str) -> int:
     operator = __ops.get(oper)
@@ -16,53 +32,37 @@ def __binCompute(op1: float, op2: float, oper: str) -> int:
     return operator(op1, op2)
 
 def __ltrEvalWOParentheses(expr: str) -> float:
-    operators: list[str] = re.findall(r"[+/]|(?<=\d|\.)\-|\*{1,2}", expr) 
-    operands = re.findall(r"(?<=[^\d\.\()])\-\d+\.?\d*|(?:\d+\.?\d*)", expr)
+    operators: list[str] = __operatorPatternCompiled.findall(expr) 
+    operands = __numberPatternCompiled.findall(expr)
     
     res = float(operands[0])
     for i in range(1, len(operators)+1):
         res = __binCompute(res, float(operands[i]), operators[i-1])
     return res
 
-def __checkExpression(expr: str) -> bool:
-    # We check if the expression is valid trying to find errors
-    # It can be really useful to help the user to fix the expression
-    patCannotStartWith = r"(\A[*/+)])" # Expression cannot start with operands or closing parenthesis - except for "-"
-    patNoOperationAfterOpenParenthesis = r"(\([+*/])" # No operation after opening parenthesis - except for "-"
-    patNoOperationBeforeCloseParenthesis = r"([+*/-]\))" # No operation before closing parenthesis
-    patNoDigitsBeforeOpenParenthesis = r"((\d|\.)\()" # No digits or dots before opening parenthesis
-    
-    # No duplicate operators - keeping in mind that there is "**" and negative numbers that can be
-    # at the beginning of the expression, after any operator and after an opening parenthesis 
-    patNoDuplicateOperators = r"[/+]{2,}|[^\d\)\*]\*|((?<=[^\d/*+\.])\-)"   #([+/]{2,})|()" 
-    
-    patNoDigitsAfterCloseParenthesis = r"(\)(\d|\.))" # No digits after closing parenthesis
-    patCannotEndWith = r"([+*/(-]\Z)" # Expression cannot end with operators or opening parenthesis
-    pattern = fr"{patCannotStartWith}|{patNoOperationAfterOpenParenthesis}|{patNoOperationBeforeCloseParenthesis}|{patNoDigitsBeforeOpenParenthesis}|{patNoDuplicateOperators}|{patNoDigitsAfterCloseParenthesis}|{patCannotEndWith}"
-    res = re.search(pattern, expr)
-    return res is None
+def __checkFullMatch(expr: str):
+    res = __fullExprPatternCompiled.sub("", expr)
+    if res != "":
+        raise ValueError("The expression is malformed.")
 
-def __checkExpressionIsFine(expr: str):
-    finePattern = r"^[\d+*/.()-]+$"
-    if re.fullmatch(finePattern, expr) is None:
-        raise ValueError("The expression contains invalid characters. The expression should only contain digits and the operators +, -, *, /, (, )")
-    
 def __countParentheses(expr: str):
-    res = expr.count("(") - expr.count(")")
-    if res != 0:
+    res = 0
+    for c in expr:
+        res += 1 if c == "(" else -1 if c == ")" else 0
+        if res < 0: # if there is closing parenthesis without opening one - raise immediately
+            raise ValueError("The expression contains unbalanced parentheses.")
+    if res > 0:
         raise ValueError("The expression contains unbalanced parentheses.")
  
 def __checkArithmeticExpr(expr: str):
-    __checkExpressionIsFine(expr)
-    if not __checkExpression(expr):
-        raise ValueError("The expression contains errors and cannot be evaluated.") 
+    __checkFullMatch(expr)
     __countParentheses(expr)
     
 def eval(expr: str) -> int:
-    expr = expr.replace(" ", "") # Clean spaces
+    expr = expr.replace(" ", "").replace("**", "^") # Clean spaces and a workaround to ease pow processing
     __checkArithmeticExpr(expr)
     # find expressions in parentheses and evaluate them
-    while  par := re.search(r"\([^()]+\)", expr):
+    while  par := __parenthesesCompiled.search(expr):
         res = __ltrEvalWOParentheses(par.group()[1:-1])
         expr = expr[:par.start()] + str(res) + expr[par.end():]
     return __ltrEvalWOParentheses(expr)
